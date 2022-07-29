@@ -1,5 +1,6 @@
 package com.example.testfive.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.CascadeType;
@@ -26,6 +27,7 @@ public class User implements Serializable {
     @Column
     private String username;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Message> messages;
 }

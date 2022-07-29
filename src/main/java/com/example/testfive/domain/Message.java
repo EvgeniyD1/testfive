@@ -1,5 +1,6 @@
 package com.example.testfive.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 
 @Data
 @Entity
@@ -22,8 +24,18 @@ public class Message implements Serializable {
     private Long id;
 
     @Column
+    private String title;
+
+    @Column
     private String text;
 
+    @Column
+    private Date date;
+
+    @Column(name = "sent_from")
+    private String sentFrom;
+
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

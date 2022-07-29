@@ -1,17 +1,17 @@
 package com.example.testfive.controller;
 
+import com.example.testfive.domain.MessageRequest;
 import com.example.testfive.domain.User;
 import com.example.testfive.service.MessageService;
 import com.example.testfive.service.UserService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/users")
 public class UserController {
 
@@ -23,29 +23,18 @@ public class UserController {
         this.messageService = messageService;
     }
 
+    @GetMapping("{username}")
+    public User findUser(@PathVariable String username) {
+        return userService.findByUsername(username);
+    }
+
     @PostMapping
-    public String findOrCreate(@RequestParam String username){
-        User user = userService.findOrCreate(username);
-        return "redirect:" + "/users/" + user.getId();
+    public void create(@RequestBody User user){
+        userService.createUser(user.getUsername());
     }
 
-    @GetMapping("{id}")
-    public String findOrCreate(@PathVariable Long id,
-                               Model model){
-        User user = userService.findById(id);
-        model.addAttribute("username", user.getUsername());
-        model.addAttribute("messages", user.getMessages());
-        return "user";
-    }
-
-    @PostMapping("{id}")
-    public String sendMessage(@PathVariable Long id,
-                               @RequestParam String message,
-                               Model model){
-        User user = userService.findById(id);
-        messageService.createMessage(user, message);
-        model.addAttribute("username", user.getUsername());
-        model.addAttribute("messages", user.getMessages());
-        return "user";
+    @PostMapping("/send")
+    public void sendMessage(@RequestBody MessageRequest messageRequest){
+        messageService.createMessage(messageRequest);
     }
 }

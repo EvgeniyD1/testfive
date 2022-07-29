@@ -21,14 +21,10 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User findOrCreate(String username) {
-        User user = findByUsername(username);
-        if (user == null) {
-            user = new User();
-            user.setUsername(username);
-            save(user);
-        }
-        return user;
+    public void createUser(String username){
+        User user = new User();
+        user.setUsername(username);
+        save(user);
     }
 
     public User findById(Long id){
