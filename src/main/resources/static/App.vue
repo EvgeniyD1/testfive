@@ -20,6 +20,9 @@
 import MessageForm from "./components/MessageForm.vue";
 import MessageList from "./components/MessageList.vue";
 import axios from "axios";
+import {getIndex, onConnected} from "./ws";
+import {sendMessage} from "./ws";
+import {addHandler} from "./ws";
 
 export default {
   components: {
@@ -27,31 +30,31 @@ export default {
   },
   data() {
     return {
-      messages: [
-        {id: 1, sendFrom: 'user1', date: new Date(),title: 'title 1', text: 'text 1'},
-        {id: 2, sendFrom: 'user2', date: new Date(),title: 'title 2', text: 'text 2'},
-        {id: 3, sendFrom: 'user3', date: new Date(),title: 'title 3', text: 'text 3'}
-      ],
+      messages: [],
       search: '',
       user: '',
     }
   },
-  methods: {
-    // sendMessage(message) {
-    //   this.messages.push(message);
-    // },
-    async sendMessage(message) {
-      if (this.user===message.sendTo){
-        this.messages.push(message);
+  mounted() {
+    addHandler(data => {
+      let index = getIndex(this.messages, data.id)
+      if (index > -1) {
+        this.messages.splice(index, 1, data)
+      } else {
+        this.messages.push(data)
       }
-      let url = '/users/send'
+    })
+  },
+  methods: {
+    sendMessage(message) {
       const newMessage = {
         sentFrom: this.user,
         title: message.title,
         text: message.text,
         sentTo: message.sendTo
       }
-      await axios.post(url, newMessage)
+      onConnected(message.sendTo)
+      sendMessage(newMessage)
     },
 
     async findOrCreateU() {
@@ -63,7 +66,6 @@ export default {
           this.messages = response.data.messages;
         }
 
-        console.log(response);
         if (response.data.length === 0) {
           url = '/users'
           let newUser = {
@@ -73,9 +75,10 @@ export default {
           this.messages = [];
         }
 
+        onConnected(this.user)
         this.search = ''
       } catch (e) {
-        alert("Enter Username")
+        alert("Enter Username Or Some Error")
       }
     },
 

@@ -1,6 +1,7 @@
 package com.example.testfive.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -30,6 +31,7 @@ public class Message implements Serializable {
     private String text;
 
     @Column
+    @JsonFormat(pattern="yyyy-MM-dd hh:mm:ss")
     private Date date;
 
     @Column(name = "sent_from")

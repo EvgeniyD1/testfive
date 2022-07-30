@@ -1,24 +1,26 @@
 <template>
-  <input type="text"
-         class="input"
-         v-model="message.sendTo"
-         placeholder="send to"
-  >
-  <input type="text"
-         class="input"
-         v-model="message.title"
-         placeholder="title"
-  >
-  <textarea class="input"
-            v-model="message.text"
-            placeholder="message"
-  ></textarea>
-  <v-btn @click="sendMessage">Send</v-btn>
+  <v-container style="padding: 0">
+    <v-combobox v-model="message.sendTo"
+                placeholder="send to"
+                :items="users"
+                @input="findByPattern"
+    ></v-combobox>
+    <v-text-field v-model="message.title"
+                  placeholder="title"
+    >
+    </v-text-field>
+    <v-textarea v-model="message.text"
+                placeholder="message">
+    </v-textarea>
+    <v-btn @click="sendMessage">Send</v-btn>
+  </v-container>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-  props:{
+  props: {
     user: {
       type: String,
       required: true
@@ -32,7 +34,9 @@ export default {
         date: '',
         title: '',
         text: ''
-      }
+      },
+      users: [],
+      count: 0
     }
   },
   emits: ['create'],
@@ -48,16 +52,21 @@ export default {
         title: '',
         text: ''
       };
+      this.users = []
+    },
+    async findByPattern() {
+      this.count += 1
+      if (this.count % 3 === 0) {
+        let url = '/users/byPattern/' + this.message.sendTo;
+        const response = await axios.get(url);
+        this.users = response.data;
+        console.log(response)
+      }
     }
-  }
+  },
 }
 </script>
 
 <style scoped>
-.input {
-  border: 1px red;
-  background: snow;
-  padding: 5px;
-  margin: 5px;
-}
+
 </style>

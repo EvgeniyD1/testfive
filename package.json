@@ -9,8 +9,11 @@
     "start": "webpack serve"
   },
   "dependencies": {
+    "@stomp/stompjs": "^6.1.2",
     "axios": "^0.27.2",
     "lodash": "^4.17.21",
+    "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3",
     "vue": "^3.2.37",
     "vue-router": "^4.1.3",
     "vuetify": "3.0.0-beta.5"

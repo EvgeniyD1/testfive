@@ -4,6 +4,8 @@ import com.example.testfive.dao.UserRepository;
 import com.example.testfive.domain.User;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -27,7 +29,8 @@ public class UserService {
         save(user);
     }
 
-    public User findById(Long id){
-        return userRepository.findById(id).orElseThrow();
+    public List<User> findAllByPattern(String username){
+        return userRepository.findAllByUsername(username);
     }
+
 }

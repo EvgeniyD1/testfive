@@ -19,7 +19,7 @@ public class MessageService {
         this.userService = userService;
     }
 
-    public void createMessage(MessageRequest messageRequest){
+    public Message createMessageWS(MessageRequest messageRequest){
         User addressee = userService.findByUsername(messageRequest.getSentTo());
 
         Message message = new Message();
@@ -30,6 +30,7 @@ public class MessageService {
         message.setText(messageRequest.getText());
 
         save(message);
+        return message;
     }
 
     public void save(Message message){
