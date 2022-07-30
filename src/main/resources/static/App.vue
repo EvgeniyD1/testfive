@@ -53,7 +53,7 @@ export default {
         text: message.text,
         sentTo: message.sendTo
       }
-      onConnected(message.sendTo)
+      // onConnected(message.sendTo)
       sendMessage(newMessage)
     },
 
