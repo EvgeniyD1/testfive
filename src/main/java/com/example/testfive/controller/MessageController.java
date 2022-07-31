@@ -19,7 +19,6 @@ public class MessageController {
     }
 
     @MessageMapping("/send")
-//    @SendTo("/topic/to/")
     public void create(MessageRequest messageRequest) {
         Message messageWS = messageService.createMessageWS(messageRequest);
         messagingTemplate.convertAndSend("/topic/to/".concat(messageRequest.getSentTo()), messageWS);
